@@ -48,25 +48,45 @@ def basic_analysis(data):
 
 
 #Task 3.3
-def create_view_evaluate_models(data, f, dt_h = 0.5, at_h = 0.65, ltt_h = 0.5, nt_i = 0.2):
-    #Create models
+def create_view_evaluate_inductive(data, f):
+    #Create
     inductive = pm.discover_petri_net_inductive(data)
-    heuristic = pm.discover_petri_net_heuristics(data, dependency_threshold=dt_h, and_threshold= at_h, loop_two_threshold= ltt_h)
-    inductive_filtered = pm.discover_petri_net_inductive(data, noise_threshold=nt_i)
-    #View models
+    #View
     pm.view_petri_net(inductive[0], inductive[1], inductive[2], format=f, graph_title="Inductive Miner")
-    pm.view_petri_net(heuristic[0], heuristic[1], heuristic[2], format=f,
-                      graph_title="Heuristic Miner: dependency threshold = " + str(dt_h) + ", and threshold = " + str(at_h) + ", loop two threshold = " + str(ltt_h))
-    pm.view_petri_net(inductive_filtered[0], inductive_filtered[1], inductive_filtered[2], format=f, graph_title="Inductive Miner: noise threshold = " + str(nt_i))
-    #Evaluate models
+    #Evaluate
     print("Inductive Miner")
-    print(pm.fitness_token_based_replay(data, inductive[0], inductive[1], inductive[2]))
-    print("Heuristic Miner: dependency threshold = " + str(dt_h) + ", and threshold = " + str(at_h) + ", loop two threshold = " + str(ltt_h))
-    print(pm.fitness_token_based_replay(data, heuristic[0], heuristic[1], heuristic[2]))
+    print("Fitness: " + str(pm.fitness_token_based_replay(data, inductive[0], inductive[1], inductive[2])))
+    #print("Precision: " + str(pm.precision_token_based_replay(data, inductive[0], inductive[1], inductive[2])))
+    print("Generalization: " + str(pm.generalization_tbr(data, inductive[0], inductive[1], inductive[2])))
+    #print("Is Sound: " + str(pm.algo.analysis.woflan.algorithm.apply(inductive[0], inductive[1], inductive[2],
+                                                                     #parameters={"return_asap_when_not_sound": True, "print_diagnostics": True, "return_diagnostics": False})))
+
+def create_view_evaluate_inductive_f(data, f, nt_i = 0.2):
+    #Create
+    inductive_filtered = pm.discover_petri_net_inductive(data, noise_threshold=nt_i)
+    #View
+    pm.view_petri_net(inductive_filtered[0], inductive_filtered[1], inductive_filtered[2], format=f, graph_title="Inductive Miner: noise threshold = " + str(nt_i))
+    #Evaluate
     print("Inductive Miner: noise threshold = " + str(nt_i))
-    print(pm.fitness_token_based_replay(data, inductive_filtered[0], inductive_filtered[1], inductive_filtered[2]))
+    print("Fitness: " + str(pm.fitness_token_based_replay(data, inductive_filtered[0], inductive_filtered[1], inductive_filtered[2])))
+    #print("Precision: " + str(pm.precision_token_based_replay(data, inductive_filtered[0], inductive_filtered[1], inductive_filtered[2])))
+    print("Generalization: " + str(pm.generalization_tbr(data, inductive_filtered[0], inductive_filtered[1], inductive_filtered[2])))
+    #print("Is Sound: " + str(pm.algo.analysis.woflan.algorithm.apply(inductive_filtered[0], inductive_filtered[1], inductive_filtered[2],
+                                                                     #parameters={"return_asap_when_not_sound": True, "print_diagnostics": True, "return_diagnostics": False})))
 
-
+def create_view_evaluate_heuristic(data, f, dt_h=0.5, at_h=0.65, ltt_h=0.5):
+    heuristic = pm.discover_petri_net_heuristics(data, dependency_threshold=dt_h, and_threshold=at_h,
+                                                 loop_two_threshold=ltt_h)
+    pm.view_petri_net(heuristic[0], heuristic[1], heuristic[2], format=f,
+                      graph_title="Heuristic Miner: dependency threshold = " + str(
+                          dt_h) + ", and threshold = " + str(at_h) + ", loop two threshold = " + str(ltt_h))
+    print("Heuristic Miner: dependency threshold = " + str(dt_h) + ", and threshold = " + str(
+        at_h) + ", loop two threshold = " + str(ltt_h))
+    print("Fitness: " + str(pm.fitness_token_based_replay(data, heuristic[0], heuristic[1], heuristic[2])))
+    #print("Precision: " + str(pm.precision_token_based_replay(data, heuristic[0], heuristic[1], heuristic[2])))
+    print("Generalization: " + str(pm.generalization_tbr(data, heuristic[0], heuristic[1], heuristic[2])))
+    #print("Is Sound: " + str(pm.algo.analysis.woflan.algorithm.apply(heuristic[0], heuristic[1], heuristic[2],
+                                                                     #parameters={"return_asap_when_not_sound": True, "print_diagnostics": True, "return_diagnostics": False})))
 
 
 
@@ -84,6 +104,38 @@ if __name__ == "__main__":
     print("Reading .xes data from: " + str(XES_PATH))
     bpic17_data = pm.read_xes(str(XES_PATH))
     print("Data read successfully")
+
+
     #basic_analysis(bpic17_data) #Task 3.2
+
+
+    #Task 3.3
     render = "html" #Change for other display options
-    create_view_evaluate_models(bpic17_data, f = render)
+
+
+    #Unsuccessful model tests (percentage_of_fitting_traces<<80 or >>80)
+    #create_view_evaluate_inductive_f(bpic17_data, f=render, nt_i = 0.2)
+    #create_view_evaluate_inductive_f(bpic17_data, f=render, nt_i = 0.1)
+    #create_view_evaluate_inductive_f(bpic17_data, f=render, nt_i = 0.05)
+    #create_view_evaluate_inductive_f(bpic17_data, f=render, nt_i = 0.025)
+    #create_view_evaluate_inductive_f(bpic17_data, f=render, nt_i = 0.0275)
+    #create_view_evaluate_heuristic(bpic17_data, f=render, dt_h=0.5, at_h=0.65, ltt_h=0.5)
+    #create_view_evaluate_heuristic(bpic17_data, f=render, dt_h=0.3, at_h=0.65, ltt_h=0.5)
+    #create_view_evaluate_heuristic(bpic17_data, f=render, dt_h=0.1, at_h=0.65, ltt_h=0.5)
+    #create_view_evaluate_heuristic(bpic17_data, f=render, dt_h=0.7, at_h=0.65, ltt_h=0.5)
+    #create_view_evaluate_heuristic(bpic17_data, f=render, dt_h=0.5, at_h=0.4, ltt_h=0.5)
+    #create_view_evaluate_heuristic(bpic17_data, f=render, dt_h=0.5, at_h=0.9, ltt_h=0.5)
+    #create_view_evaluate_heuristic(bpic17_data, f=render, dt_h=0.5, at_h=0.65, ltt_h=0.3)
+    #create_view_evaluate_heuristic(bpic17_data, f=render, dt_h=0.5, at_h=0.65, ltt_h=0.8)
+    #create_view_evaluate_heuristic(bpic17_data, f=render, dt_h=0.1, at_h=0.1, ltt_h=0.1)
+    #create_view_evaluate_heuristic(bpic17_data, f=render, dt_h=0.01, at_h=0.01, ltt_h=0.01)
+    #create_view_evaluate_heuristic(bpic17_data, f=render, dt_h=0.9, at_h=0.9, ltt_h=0.9)
+
+
+    #Final models
+    print("Working on Inductive Miner")
+    create_view_evaluate_inductive(bpic17_data, f = render) #Reference point
+    print("Working on IMf")
+    create_view_evaluate_inductive_f(bpic17_data, f=render, nt_i = 0.028) #Successful IMf
+    print("Working on Heuristic Miner")
+    create_view_evaluate_heuristic(bpic17_data, f=render) #Basic Heuristic Miner
