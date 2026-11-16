@@ -132,6 +132,7 @@ if __name__ == "__main__":
     DATA_DIR = PROJECT_ROOT / "data"
     XES_PATH = DATA_DIR / "BPIC17.xes"
     RESULT_DIR = PROJECT_ROOT / "result"
+    RESULT_DIR.mkdir(parents=True, exist_ok=True)
     BPMN_PATH = RESULT_DIR / "imf_model.bpmn"
     # Import data
     if not XES_PATH.is_file():
