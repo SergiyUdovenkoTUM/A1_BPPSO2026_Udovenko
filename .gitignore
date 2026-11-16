@@ -7,3 +7,4 @@ __pycache__/
 Thumbs.db
 .env
 result/imf_model.bpmn
+!result/.gitkeep
