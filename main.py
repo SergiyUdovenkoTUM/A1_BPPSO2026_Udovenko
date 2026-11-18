@@ -183,7 +183,6 @@ if __name__ == "__main__":
     create_view_evaluate_model(bpic17_data, f=render, approach="IMf", nt_i = 0.05)
     create_view_evaluate_model(bpic17_data, f=render, approach="IMf", nt_i = 0.025)
     create_view_evaluate_model(bpic17_data, f=render, approach="IMf", nt_i = 0.0125)
-    create_view_evaluate_model(bpic17_data, f=render, approach="IMf", nt_i = 0.0275)
 
     create_view_evaluate_model(bpic17_data, f=render, approach="HM", dt_h=0.3, at_h=0.65, ltt_h=0.5)
     create_view_evaluate_model(bpic17_data, f=render, approach="HM", dt_h=0.1, at_h=0.65, ltt_h=0.5)
