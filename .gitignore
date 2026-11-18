@@ -6,4 +6,4 @@ __pycache__/
 .DS_Store
 Thumbs.db
 .env
-result/imf_model.bpmn
+result/*

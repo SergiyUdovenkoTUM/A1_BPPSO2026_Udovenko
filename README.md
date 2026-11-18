@@ -20,8 +20,6 @@
 - Create a virtual environment
 - Install requirements
 - Install graphviz-16.1.1 from https://graphviz.org/download/
-- (Optionally) Change render variable value in main.py for different means of petri net visualization
-- (Optionally) Comment/uncomment code with unsuccessful models in main.py
 
 ## Run
 python main.py
