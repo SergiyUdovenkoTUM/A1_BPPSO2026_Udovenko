@@ -110,9 +110,9 @@ def create_view_evaluate_model(data, f, approach, nt_i = 0.2, dt_h=0.5, at_h=0.6
         case "HM":
             model = pm.discover_petri_net_heuristics(data, dependency_threshold=dt_h, and_threshold=at_h, loop_two_threshold=ltt_h)
             pm.view_petri_net(model[0], model[1], model[2], format=f,
-                              graph_title="Heuristic Miner: dependency threshold = " + str(
+                              graph_title="Heuristics Miner: dependency threshold = " + str(
                                   dt_h) + ", and threshold = " + str(at_h) + ", loop two threshold = " + str(ltt_h))
-            print("Heuristic Miner: dependency threshold = " + str(dt_h) + ", and threshold = " + str(
+            print("Heuristics Miner: dependency threshold = " + str(dt_h) + ", and threshold = " + str(
                 at_h) + ", loop two threshold = " + str(ltt_h))
             is_sound = pm.algo.analysis.woflan.algorithm.apply(model[0], model[1], model[2], parameters={
                 "return_asap_when_not_sound": True, "print_diagnostics": True, "return_diagnostics": False})
@@ -132,7 +132,7 @@ def create_view_evaluate_model(data, f, approach, nt_i = 0.2, dt_h=0.5, at_h=0.6
     print("Precision: " + str(pm.precision_token_based_replay(data, model[0], model[1], model[2])))
     print("Generalization: " + str(pm.generalization_tbr(data, model[0], model[1], model[2])))
     print("Extended Cardoso Complexity Score: " + str(self_made_ext_cardoso(model[0])))
-    if approach != "HM" and approach != "AM": #Due to no soundness guarantees of Heuristic and Alpha Miners
+    if approach != "HM" and approach != "AM": #Due to no soundness guarantees of Heuristics and Alpha Miners
         print("Extended Cyclomatic Complexity Score: " + str(self_made_ext_cyclomatic(model[0], model[1], model[2])))
 
     return model
