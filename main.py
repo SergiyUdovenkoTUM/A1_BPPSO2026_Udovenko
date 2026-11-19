@@ -176,15 +176,18 @@ if __name__ == "__main__":
     pm.write_bpmn(pm.convert_to_bpmn(*in_hm), file_path=str(HEURISTIC_PATH))
 
 
-
     #Further model tests
     create_view_evaluate_model(bpic17_data, f=render, approach="IMf", nt_i = 0.2)
     create_view_evaluate_model(bpic17_data, f=render, approach="IMf", nt_i = 0.1)
     create_view_evaluate_model(bpic17_data, f=render, approach="IMf", nt_i = 0.05)
     create_view_evaluate_model(bpic17_data, f=render, approach="IMf", nt_i = 0.025)
     create_view_evaluate_model(bpic17_data, f=render, approach="IMf", nt_i = 0.0125)
+    create_view_evaluate_model(bpic17_data, f=render, approach="IMf", nt_i = 0.030)
+    create_view_evaluate_model(bpic17_data, f=render, approach="IMf", nt_i = 0.020)
+    create_view_evaluate_model(bpic17_data, f=render, approach="IMf", nt_i = 0.00275)
 
-    create_view_evaluate_model(bpic17_data, f=render, approach="HM", dt_h=0.3, at_h=0.65, ltt_h=0.5)
+
+    #create_view_evaluate_model(bpic17_data, f=render, approach="HM", dt_h=0.3, at_h=0.65, ltt_h=0.5)
     create_view_evaluate_model(bpic17_data, f=render, approach="HM", dt_h=0.1, at_h=0.65, ltt_h=0.5)
     create_view_evaluate_model(bpic17_data, f=render, approach="HM", dt_h=0.7, at_h=0.65, ltt_h=0.5)
     create_view_evaluate_model(bpic17_data, f=render, approach="HM", dt_h=0.5, at_h=0.4, ltt_h=0.5)
@@ -198,7 +201,7 @@ if __name__ == "__main__":
 
     #Final model
     print("Working on IMf")
-    model = create_view_evaluate_model(bpic17_data, f=render, approach="IMf", nt_i = 0.028) #Successful IMf
+    model = create_view_evaluate_model(bpic17_data, f=render, approach="IMf", nt_i=0.030)  # Successful IMf
 
     #Final result storage
     result = pm.convert_to_bpmn(*model)
