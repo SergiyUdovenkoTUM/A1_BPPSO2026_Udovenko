@@ -4,8 +4,6 @@ import pm4py as pm
 import networkx as nx
 import statistics as st
 
-from polars import Null
-
 #Check if preprocessing needed
 def preprocessing_check(data):
     universal_columns = pm.convert_to_dataframe(data).drop(
@@ -86,10 +84,9 @@ def self_made_ext_cyclomatic(net, im, fm): #Extended Cyclomatic metric implement
     for transition in reachability_g.transitions:
         reachability_di_g.add_edge(transition.from_state, transition.to_state)
 
-    states_n = reachability_di_g.number_of_nodes()
-    edges_n = reachability_di_g.number_of_edges()
+    states_n = len(reachability_g.states)
+    edges_n = len(reachability_g.transitions)
     scc_n = nx.number_strongly_connected_components(reachability_di_g)
-
 
     return edges_n-states_n+scc_n
 
@@ -97,6 +94,7 @@ def self_made_ext_cyclomatic(net, im, fm): #Extended Cyclomatic metric implement
 #Create, view and evaluate a model
 def create_view_evaluate_model(data, f, approach, nt_i = 0.2, dt_h=0.5, at_h=0.65, ltt_h=0.5):
     #Create and View
+    is_sound = True
     match approach:
         case "IM":
             model = pm.discover_petri_net_inductive(data)
@@ -126,13 +124,13 @@ def create_view_evaluate_model(data, f, approach, nt_i = 0.2, dt_h=0.5, at_h=0.6
             print("Is Sound: " + str(is_sound))
         case _:
             print("No such model type: " + str(approach))
-            return Null
+            return None
     #Evaluate
     print("Fitness: " + str(pm.fitness_token_based_replay(data, model[0], model[1], model[2])))
     print("Precision: " + str(pm.precision_token_based_replay(data, model[0], model[1], model[2])))
     print("Generalization: " + str(pm.generalization_tbr(data, model[0], model[1], model[2])))
     print("Extended Cardoso Complexity Score: " + str(self_made_ext_cardoso(model[0])))
-    if approach != "HM" and approach != "AM": #Due to no soundness guarantees of Heuristics and Alpha Miners
+    if is_sound: #Due to no soundness guarantees of Heuristics and Alpha Miners
         print("Extended Cyclomatic Complexity Score: " + str(self_made_ext_cyclomatic(model[0], model[1], model[2])))
 
     return model
@@ -180,14 +178,13 @@ if __name__ == "__main__":
     create_view_evaluate_model(bpic17_data, f=render, approach="IMf", nt_i = 0.2)
     create_view_evaluate_model(bpic17_data, f=render, approach="IMf", nt_i = 0.1)
     create_view_evaluate_model(bpic17_data, f=render, approach="IMf", nt_i = 0.05)
-    create_view_evaluate_model(bpic17_data, f=render, approach="IMf", nt_i = 0.025)
     create_view_evaluate_model(bpic17_data, f=render, approach="IMf", nt_i = 0.0125)
-    create_view_evaluate_model(bpic17_data, f=render, approach="IMf", nt_i = 0.030)
-    create_view_evaluate_model(bpic17_data, f=render, approach="IMf", nt_i = 0.020)
-    create_view_evaluate_model(bpic17_data, f=render, approach="IMf", nt_i = 0.00275)
+    create_view_evaluate_model(bpic17_data, f=render, approach="IMf", nt_i = 0.03)
+    create_view_evaluate_model(bpic17_data, f=render, approach="IMf", nt_i = 0.02)
+    create_view_evaluate_model(bpic17_data, f=render, approach="IMf", nt_i = 0.0275)
 
 
-    #create_view_evaluate_model(bpic17_data, f=render, approach="HM", dt_h=0.3, at_h=0.65, ltt_h=0.5)
+    create_view_evaluate_model(bpic17_data, f=render, approach="HM", dt_h=0.3, at_h=0.65, ltt_h=0.5)
     create_view_evaluate_model(bpic17_data, f=render, approach="HM", dt_h=0.1, at_h=0.65, ltt_h=0.5)
     create_view_evaluate_model(bpic17_data, f=render, approach="HM", dt_h=0.7, at_h=0.65, ltt_h=0.5)
     create_view_evaluate_model(bpic17_data, f=render, approach="HM", dt_h=0.5, at_h=0.4, ltt_h=0.5)
@@ -201,7 +198,7 @@ if __name__ == "__main__":
 
     #Final model
     print("Working on IMf")
-    model = create_view_evaluate_model(bpic17_data, f=render, approach="IMf", nt_i=0.030)  # Successful IMf
+    model = create_view_evaluate_model(bpic17_data, f=render, approach="IMf", nt_i = 0.025)  # Final IMf
 
     #Final result storage
     result = pm.convert_to_bpmn(*model)
